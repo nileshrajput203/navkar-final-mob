@@ -13,7 +13,7 @@ export default function Stats() {
   };
 
   return (
-    <section className="relative z-10 pb-16 md:pb-24">
+    <section className="relative z-10 pt-16 md:pt-24 pb-16 md:pb-24">
       <div className="mx-auto max-w-7xl px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {stats.map((s, index) => (
           <motion.div
