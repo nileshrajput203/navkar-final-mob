@@ -2,9 +2,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { ArrowUp, MessageCircle } from "lucide-react";
+import { MessageCircle, Phone } from "lucide-react";
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { NavkarLogo } from './NavkarLogo';
 import { footerLinks } from '@/lib/data';
@@ -80,13 +79,6 @@ export function Footer() {
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
   return (
     <>
       <footer className="py-12 border-t bg-secondary">
@@ -137,14 +129,19 @@ export function Footer() {
         </div>
         <div className="mt-8 pt-8 border-t border-border/50">
           <div className="mx-auto max-w-7xl px-4 text-center text-sm text-muted-foreground">
-            © {year ?? new Date().getFullYear()} Navkar Group. All rights reserved.
+            <p>
+              © {year ?? new Date().getFullYear()} Navkar Group. All rights reserved. | Designed by{' '}
+              <a href="https://blinkbeyond.co.in/" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">
+                BlinkBeyond
+              </a>
+            </p>
           </div>
         </div>
       </footer>
       
       {/* Floating Action Buttons */}
       <div className={cn(
-        "fixed bottom-4 right-4 z-50 transition-opacity duration-300",
+        "fixed bottom-4 right-4 z-50 transition-opacity duration-300 space-y-3",
         isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
       )}>
         <a
@@ -152,25 +149,22 @@ export function Footer() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat on WhatsApp"
-          className="flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-transform hover:scale-110 animate-pulse"
+          className="relative flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-transform hover:scale-110 ring-wave"
         >
           <MessageCircle className="h-8 w-8" />
         </a>
       </div>
-      <div className={cn(
+       <div className={cn(
         "fixed bottom-4 left-4 z-50 transition-opacity duration-300",
         isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
       )}>
-        <Button
-          onClick={scrollToTop}
-          suppressHydrationWarning
-          className="h-12 w-12 rounded-full p-2 shadow-lg transition-transform hover:scale-110"
-          variant="default"
-          size="icon"
-          aria-label="Scroll to top"
+        <a
+          href="tel:+917888022788"
+          aria-label="Call Us"
+          className="relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-110"
         >
-          <ArrowUp className="h-6 w-6" />
-        </Button>
+          <Phone className="h-7 w-7" />
+        </a>
       </div>
     </>
   );

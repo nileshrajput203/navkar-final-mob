@@ -1,8 +1,8 @@
 
 "use client";
 
-import { Star } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { testimonials } from "@/lib/data";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -55,17 +55,21 @@ export function Testimonials() {
                 <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                   <div className="h-full p-1">
                     <Card className="h-full flex flex-col justify-between shadow-lg">
-                      <CardContent className="p-6">
-                        <div className="flex items-center mb-4">
-                          {Array.from({ length: testimonial.rating }).map((_, i) => (
-                            <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                          ))}
+                       <CardContent className="p-6 flex-grow flex flex-col">
+                         <div className="mb-5">
+                            <Image
+                                src={testimonial.avatar}
+                                alt={`${testimonial.author}'s avatar`}
+                                width={64}
+                                height={64}
+                                className="rounded-full object-cover w-16 h-16 shadow-md"
+                            />
                         </div>
-                        <blockquote className="text-muted-foreground italic">
+                        <blockquote className="text-muted-foreground italic flex-grow">
                           "{testimonial.quote}"
                         </blockquote>
                       </CardContent>
-                      <div className="p-6 pt-0 mt-auto">
+                      <div className="p-6 pt-0">
                         <p className="font-bold text-lg">{testimonial.author}</p>
                         <p className="text-sm text-muted-foreground">
                           {testimonial.location}

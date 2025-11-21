@@ -9,163 +9,200 @@ import {
   Building,
   MapPin,
   GalleryVertical,
-  ClipboardList,
+  Download,
   Send,
+  Award,
 } from "lucide-react";
 import type { projects } from "@/lib/data";
-import Autoplay from "embla-carousel-autoplay";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { useEnquiryStore } from "@/hooks/use-enquiry-store";
+import { Separator } from "@/components/ui/separator";
 
 type Project = (typeof projects)[0];
 
 interface ProjectDetailsProps {
-    project: Project;
+  project: Project;
 }
 
 export function ProjectDetails({ project }: ProjectDetailsProps) {
   const { open: openEnquiryPopup } = useEnquiryStore();
 
+  const reraInfo = project.highlights.find(h => h.toLowerCase().includes("rera"));
+
   return (
-    <div>
+    <div className="bg-background">
+      {/* 1. Hero/Banner */}
       <div className="relative h-64 md:h-96">
         <Image
-          src={project.gallery[0].src}
-          alt={project.gallery[0].alt}
-          data-ai-hint={project.gallery[0].aiHint}
+          src={project.image}
+          alt={`Hero image for ${project.name}`}
+          data-ai-hint={project.aiHint}
           fill
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
         <div className="absolute inset-0 flex items-end text-white">
           <div className="mx-auto max-w-7xl px-4 w-full pb-8">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+            <motion.h1 
+              className="text-4xl md:text-6xl font-bold tracking-tight"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
               {project.name}
-            </h1>
+            </motion.h1>
+            <motion.p 
+              className="mt-2 text-lg md:text-xl font-medium text-primary-foreground/90"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              {project.status}
+            </motion.p>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 py-16 md:py-24">
-        <div className="grid lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2 space-y-12">
-            
-            <Link href="/#projects">
-                <Button variant="outline">
+      {/* 2. Quick Action Buttons */}
+      <div className="border-b bg-secondary/50">
+          <div className="mx-auto max-w-7xl px-4 py-3 flex flex-wrap items-center justify-start gap-2 md:gap-4">
+            <Button variant="ghost" size="sm" onClick={openEnquiryPopup}>
+              <Send className="mr-2 h-4 w-4" /> Quick Inquiry
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <a href="#gallery">
+                <GalleryVertical className="mr-2 h-4 w-4" /> View Gallery
+              </a>
+            </Button>
+            <Button variant="ghost" size="sm" disabled> 
+              <Download className="mr-2 h-4 w-4" /> Download Brochure
+            </Button>
+             <Link href="/#projects" className="ml-auto">
+                <Button variant="outline" size="sm">
                     <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back to All Projects
+                    Back to Projects
                 </Button>
             </Link>
+          </div>
+      </div>
 
-            {/* About Section */}
-            <section id="about">
-                <h2 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-                <Building className="h-8 w-8 text-primary" />
-                About {project.name}
-                </h2>
-                <div className="mt-4 text-lg text-muted-foreground space-y-4">
-                    <p>{project.description}</p>
-                </div>
-                <div className="mt-6 grid sm:grid-cols-2 gap-4 text-lg">
-                    <div className="flex items-center gap-3">
-                        <MapPin className="h-6 w-6 text-primary" />
-                        <div><strong>Location:</strong> {project.location}</div>
+      <main className="mx-auto max-w-7xl px-4 py-12 md:py-16">
+        <div className="grid lg:grid-cols-3 gap-8 md:gap-12">
+          {/* Left Column */}
+          <div className="lg:col-span-2 space-y-12 md:space-y-16">
+            
+            {/* 3. Overview/Description Block */}
+            <section id="overview">
+                <div className="grid md:grid-cols-2 gap-8 items-start">
+                    <div className="aspect-video relative overflow-hidden rounded-lg shadow-md">
+                        <Image 
+                            src={project.gallery[1]?.src ?? project.image} 
+                            alt={project.gallery[1]?.alt ?? project.name}
+                            data-ai-hint={project.gallery[1]?.aiHint ?? project.aiHint}
+                            fill 
+                            className="object-cover"
+                        />
                     </div>
-                    <div className="flex items-center gap-3">
-                        <Building className="h-6 w-6 text-primary" />
-                        <div><strong>Type:</strong> {project.type}</div>
+                    <div className="flex flex-col h-full">
+                        <h2 className="text-3xl font-bold tracking-tight">Project Overview</h2>
+                        <p className="mt-4 text-muted-foreground flex-grow">{project.description}</p>
+                        {reraInfo && (
+                            <div className="mt-4 rounded-md border border-green-300 bg-green-50 p-3">
+                                <div className="flex items-center gap-3">
+                                    <Award className="h-6 w-6 text-green-700" />
+                                    <div>
+                                        <h3 className="font-semibold text-green-800">RERA Registered</h3>
+                                        <p className="text-sm text-green-700/80">{reraInfo}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>
 
-            {/* Highlights Section */}
-            <section id="highlights">
-                <h2 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-                <CheckCircle2 className="h-8 w-8 text-primary" />
-                Project Highlights
-                </h2>
-                <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {project.highlights.map((highlight) => (
-                    <Card key={highlight} className="bg-secondary">
-                    <CardContent className="p-4 flex items-center gap-3">
+            {/* 5. Amenities/Features Row */}
+            <section id="amenities">
+                <h2 className="text-3xl font-bold tracking-tight">Amenities & Features</h2>
+                <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {project.highlights.filter(h => !h.toLowerCase().includes("rera")).map((highlight) => (
+                    <div key={highlight} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/70">
                         <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
-                        <span className="font-medium">{highlight}</span>
-                    </CardContent>
-                    </Card>
+                        <span className="font-medium text-sm">{highlight}</span>
+                    </div>
                 ))}
                 </div>
             </section>
 
-            {/* Gallery Section */}
+            {/* 4. Floor Plans/Gallery Section */}
             <section id="gallery">
-                <h2 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-                <GalleryVertical className="h-8 w-8 text-primary" />
-                Gallery
-                </h2>
-                <div className="mt-6">
-                <Carousel 
-                    className="w-full" 
-                    opts={{ loop: true }}
-                    plugins={[
-                        Autoplay({
-                            delay: 3000,
-                            stopOnInteraction: true,
-                        }),
-                    ]}
-                >
-                    <CarouselContent>
+                <h2 className="text-3xl font-bold tracking-tight">Gallery</h2>
+                <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
                     {project.gallery.map((image, index) => (
-                        <CarouselItem key={index}>
-                        <div className="aspect-[4/3] relative overflow-hidden rounded-2xl shadow-lg">
-                            <Image
-                            src={image.src}
-                            alt={image.alt}
-                            data-ai-hint={image.aiHint}
-                            fill
-                            className="object-cover"
+                        <div key={index} className="aspect-video relative overflow-hidden rounded-lg shadow-md transition-transform hover:scale-105">
+                             <Image
+                                src={image.src}
+                                alt={image.alt}
+                                data-ai-hint={image.aiHint}
+                                fill
+                                className="object-cover"
                             />
                         </div>
-                        </CarouselItem>
                     ))}
-                    </CarouselContent>
-                    <CarouselPrevious className="left-4" />
-                    <CarouselNext className="right-4" />
-                </Carousel>
                 </div>
             </section>
-            </div>
+            
+            {/* 7. Location & Contact Section */}
+            <section id="location">
+                <h2 className="text-3xl font-bold tracking-tight">Location</h2>
+                <div className="mt-6 grid md:grid-cols-2 gap-8 items-start rounded-lg border bg-secondary/50 p-6">
+                    <div>
+                        <h3 className="text-lg font-semibold">Site Address</h3>
+                        <p className="mt-2 text-muted-foreground">
+                            <MapPin className="inline-block h-4 w-4 mr-2 text-primary"/>
+                            {project.location}
+                        </p>
+                        <Button asChild className="mt-4"> 
+                            <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(project.location)}`} target="_blank">View on Google Maps</a>
+                        </Button>
+                    </div>
+                    <div className="aspect-video w-full bg-muted rounded-md overflow-hidden">
+                         {/* Placeholder for map iframe */}
+                         <div className="w-full h-full flex items-center justify-center text-muted-foreground/50">
+                             <p>Google Map Preview</p>
+                         </div>
+                    </div>
+                </div>
+            </section>
 
-            {/* Sticky Enquire Card */}
-            <aside className="lg:col-span-1">
+          </div>
+
+          {/* Right Column (Sticky) */}
+          <aside className="lg:col-span-1">
             <div className="sticky top-24">
-                <Card className="shadow-xl">
-                <CardHeader>
-                    <CardTitle className="text-2xl">Interested in this project?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-muted-foreground mb-6">
-                    Get the brochure, floor plans, and pricing details directly in your inbox.
-                    </p>
-                    <Button size="lg" className="w-full" onClick={openEnquiryPopup}>
-                        <Send className="mr-2 h-4 w-4" />
-                        Enquire Now
-                    </Button>
-                </CardContent>
+                <Card className="shadow-lg border-primary/20">
+                    <CardHeader>
+                        <CardTitle className="text-2xl flex items-center gap-2"><Send className="h-6 w-6 text-primary"/> Interested?</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-muted-foreground mb-4">
+                            Get the brochure, floor plans, and pricing details directly in your inbox.
+                        </p>
+                        <Button size="lg" className="w-full" onClick={openEnquiryPopup}>
+                            Enquire Now
+                        </Button>
+                    </CardContent>
                 </Card>
             </div>
-            </aside>
+          </aside>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
+
+// Added motion for a more dynamic feel, but need to import it.
+import { motion } from "framer-motion";

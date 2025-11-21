@@ -59,3 +59,60 @@
     scroll-padding-top: 6rem; /* 96px */
   }
 }
+
+@layer components {
+  .ring-wave::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 9999px;
+    border: 2px solid #25D366;
+    animation: ring-wave-animation 1.5s infinite;
+    opacity: 0;
+  }
+
+  /* Featured Projects Section */
+  .featured-projects {
+    @apply py-20 md:py-28 bg-white;
+  }
+
+  .project-number-container {
+      @apply text-6xl md:text-8xl font-extrabold text-gray-200/80 -mr-4 -mt-4;
+  }
+  
+  .project-image-container .project-actions {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .project-image-container:hover .project-actions {
+      opacity: 1;
+      transform: translateY(0);
+  }
+
+  .project-image-container .project-image {
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .project-image-container:hover .project-image {
+      transform: scale(1.05);
+  }
+}
+
+@keyframes ring-wave-animation {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}

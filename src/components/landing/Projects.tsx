@@ -1,14 +1,144 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, MapPin } from "lucide-react";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { motion, useInView } from "framer-motion";
 import { projects, TABS, type Tab } from "@/lib/data";
+import { cn } from "@/lib/utils";
+import { Info, Download, MapPin, Building, Ruler, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+// New Component for the standard card view
+function ProjectCard({ project }: { project: (typeof projects)[0] }) {
+  const cardRef = useRef(null);
+  const isInView = useInView(cardRef, { once: true, amount: 0.3 });
+
+  const cardVariants = {
+    initial: { opacity: 0, y: 50 },
+    animate: { opacity: 1, y: 0 },
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      variants={cardVariants}
+      initial="initial"
+      animate={isInView ? "animate" : "initial"}
+      transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
+    >
+      <Link href={`/projects/${project.id}`} className="block group">
+        <div className="bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 h-full flex flex-col">
+          <div className="relative aspect-[16/10] overflow-hidden">
+            <Image
+              src={project.image}
+              alt={project.name}
+              fill
+              className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+            />
+             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"/>
+             <div className="absolute top-4 right-4">
+                <span className="px-3.5 py-2 rounded-full text-xs font-bold tracking-wider uppercase bg-white/90 backdrop-blur-sm text-primary shadow-sm">
+                    {project.status}
+                </span>
+            </div>
+             <div className="absolute bottom-4 left-4 right-4">
+                <h3 className="text-2xl font-bold text-white tracking-tight leading-tight">
+                    {project.name}
+                </h3>
+                <p className="mt-1 flex items-center gap-2 text-white/90">
+                    <MapPin className="h-5 w-5 flex-shrink-0" />
+                    <span className="font-medium">{project.location}</span>
+                </p>
+            </div>
+          </div>
+          <div className="p-6 flex flex-col flex-grow bg-gray-50">
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-gray-500 font-medium">{project.type}</p>
+                {project.reraNo && (
+                    <span className="px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-green-100 text-green-800">
+                        RERA Verified
+                    </span>
+                )}
+            </div>
+            <div className="mt-auto pt-6 flex justify-end">
+              <Button className="bg-primary text-white rounded-full px-6 py-3 font-semibold group-hover:bg-primary/90 transition-colors duration-300 shadow-md">
+                Explore Now
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
+
+// New Component for the detailed list view
+function ProjectListItem({ project, index }: { project: (typeof projects)[0]; index: number }) {
+  const itemRef = useRef(null);
+  const isInView = useInView(itemRef, { once: true, amount: 0.3 });
+
+  const projectVariants = {
+    initial: { opacity: 0, y: 50 },
+    animate: { opacity: 1, y: 0 },
+  };
+
+  return (
+    <motion.div
+      ref={itemRef}
+      className={cn(
+        "featured-project-item flex flex-col lg:flex-row items-center gap-8 lg:gap-12",
+        index % 2 !== 0 && "lg:flex-row-reverse"
+      )}
+      variants={projectVariants}
+      initial="initial"
+      animate={isInView ? "animate" : "initial"}
+      transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
+    >
+      <div className="w-full lg:w-1/2 relative project-image-container overflow-hidden rounded-lg shadow-xl">
+        <Image
+          src={project.image}
+          alt={project.name}
+          width={800}
+          height={600}
+          className="w-full h-full object-cover project-image"
+        />
+        <div className="absolute top-4 left-4 flex flex-col gap-3 project-actions">
+          <button className="p-3 bg-black/50 text-white rounded-full hover:bg-black/80 transition-all">
+            <Info className="h-5 w-5" />
+          </button>
+          <button className="p-3 bg-black/50 text-white rounded-full hover:bg-black/80 transition-all">
+            <Download className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+      <div className="w-full lg:w-1/2 flex items-start gap-4">
+        <div className="project-number-container">
+          <span className="project-number">{(index + 1).toString().padStart(2, "0")}</span>
+        </div>
+        <div className="flex-1 project-details">
+          <h4 className="text-2xl md:text-3xl font-bold text-gray-900">{project.name}</h4>
+          <div className="mt-4 space-y-3 text-gray-600">
+            <div className="flex items-center gap-3">
+              <MapPin className="h-5 w-5 text-primary" />
+              <span>{project.location}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Ruler className="h-5 w-5 text-primary" />
+              <span>{project.area}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Building className="h-5 w-5 text-primary" />
+              <span>{project.type}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export function Projects() {
   const [filter, setFilter] = useState<Tab>("All");
@@ -18,101 +148,52 @@ export function Projects() {
     return p.type.includes(filter);
   });
 
-  const fadeInAnimation = {
-    initial: { opacity: 0, y: 50 },
-    whileInView: { opacity: 1, y: 0 },
-    transition: { duration: 0.5, ease: "easeInOut" },
-  };
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   return (
-    <motion.section 
-      id="projects" 
-      className="py-16 md:py-24 bg-background"
-      initial={fadeInAnimation.initial}
-      whileInView={fadeInAnimation.whileInView}
-      transition={fadeInAnimation.transition}
-    >
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 text-center md:text-left">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Featured Projects</h2>
-            <p className="mt-2 text-lg text-muted-foreground">
-              Handpicked developments in Palghar.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 p-1 bg-secondary rounded-full mx-auto md:mx-0">
+    <section id="projects" className="featured-projects" ref={sectionRef}>
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="flex flex-col md:flex-row justify-between items-center mb-12 md:mb-20 gap-6"
+        >
+          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">Featured Projects</h2>
+          <div className="flex items-center justify-center gap-2 p-1.5 bg-gray-200/60 rounded-full shadow-sm">
             {TABS.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setFilter(tab)}
                 suppressHydrationWarning
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                className={cn(
+                  "px-5 py-2.5 rounded-full text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                   filter === tab
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                    ? "bg-primary text-white shadow-md"
+                    : "text-gray-600 hover:bg-white/80"
+                )}
               >
                 {tab}
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((p) => (
-            <Link key={p.id} href={`/projects/${p.id}`} className="block group">
-              <Card className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
-                <div className="relative h-60 overflow-hidden">
-                  <Image
-                    src={p.image}
-                    alt={p.name}
-                    data-ai-hint={p.aiHint}
-                    fill
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-transform duration-500 group-hover:scale-105" />
-                  <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white">
-                    <MapPin className="h-5 w-5" /> {p.location}
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="px-3 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-primary text-primary-foreground">{p.status}</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col flex-grow">
-                  <CardHeader>
-                    <CardTitle className="text-2xl tracking-tight group-hover:text-primary transition-colors">{p.name}</CardTitle>
-                    <div className="text-muted-foreground pt-1">
-                        Type: <span className="font-medium text-foreground">{p.type}</span>
-                      </div>
-                  </CardHeader>
-
-                  <CardContent className="pt-0 flex-grow">
-                    <div className="flex flex-wrap gap-2 text-sm">
-                      {p.highlights.slice(0, 3).map((h) => (
-                        <span
-                          key={h}
-                          className="px-3 py-1 rounded-full bg-secondary text-secondary-foreground"
-                        >
-                          {h}
-                        </span>
-                      ))}
-                    </div>
-                  </CardContent>
-                  
-                  <CardFooter>
-                      <Button variant="ghost" className="w-full text-primary group-hover:bg-primary/10">
-                        View Details
-                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                      </Button>
-                  </CardFooter>
-                </div>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        {filter === "All" ? (
+          <div className="space-y-20 md:space-y-28">
+            {filteredProjects.map((p, index) => (
+              <ProjectListItem key={p.id} project={p} index={index} />
+            ))}
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {filteredProjects.map((p) => (
+              <ProjectCard key={p.id} project={p} />
+            ))}
+          </div>
+        )}
       </div>
-    </motion.section>
+    </section>
   );
 }

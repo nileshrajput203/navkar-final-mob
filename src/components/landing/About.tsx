@@ -24,10 +24,7 @@ export function About() {
     >
       <div className="mx-auto max-w-7xl px-4 grid md:grid-cols-2 gap-12 items-center">
         <div>
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold">
-            <Home className="h-5 w-5" /> About Navkar Group
-          </div>
-          <h3 className="mt-6 text-3xl md:text-4xl font-bold tracking-tight">
+          <h3 className="text-3xl md:text-4xl font-bold tracking-tight">
             Building with Integrity, Delivering with Excellence
           </h3>
           <p className="mt-4 text-lg text-muted-foreground">

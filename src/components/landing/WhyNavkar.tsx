@@ -13,7 +13,7 @@ const whyFeatures = [
   },
   {
     icon: Landmark,
-    title: "Strategic Locations",
+    title: "Prime Locations",
     desc: "Our projects are situated in well-connected, prime addresses close to business hubs, transit, and lifestyle amenities.",
   },
   {
