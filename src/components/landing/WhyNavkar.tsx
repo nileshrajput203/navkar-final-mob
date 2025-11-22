@@ -1,4 +1,3 @@
-the error is in featured project section 
 "use client";
 
 import { ShieldCheck, Landmark, Building2, Leaf } from "lucide-react";

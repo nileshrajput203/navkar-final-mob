@@ -30,7 +30,7 @@ interface ProjectDetailsProps {
 export function ProjectDetails({ project }: ProjectDetailsProps) {
   const { open: openEnquiryPopup } = useEnquiryStore();
 
-  const reraInfo = project.highlights?.find(h => h.toLowerCase().includes("rera"));
+  const reraInfo = project.reraNo && project.reraNo !== "Not Mentioned" ? project.reraNo : null;
 
   return (
     <div className="bg-background">
@@ -129,10 +129,10 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
             <section id="amenities">
                 <h2 className="text-3xl font-bold tracking-tight">Amenities & Features</h2>
                 <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {(project.highlights?.filter(h => !h.toLowerCase().includes("rera")) ?? []).map((highlight) => (
-                    <div key={highlight} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/70">
+                {(project.amenities ?? []).map((amenity) => (
+                    <div key={amenity} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/70">
                         <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
-                        <span className="font-medium text-sm">{highlight}</span>
+                        <span className="font-medium text-sm">{amenity}</span>
                     </div>
                 ))}
                 </div>
