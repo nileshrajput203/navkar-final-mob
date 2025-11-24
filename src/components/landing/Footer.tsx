@@ -3,60 +3,14 @@
 
 import { useState, useEffect } from 'react';
 import { Phone } from "lucide-react";
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp, FaInstagram } from 'react-icons/fa';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { footerLinks } from '@/lib/data';
 
-const XIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-    {...props}
-    fill="currentColor"
-  >
-    <g>
-      <path
-        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-      ></path>
-    </g>
-  </svg>
-);
-
-const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg 
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        {...props} 
-        fill="currentColor"
-    >
-        <path d="M9.19795 21.5H13.198V13.4901H16.8021L17.198 9.50977H13.198V7.51172C13.198 6.94687 13.6458 6.5 14.198 6.5H17.198V2.5H14.198C11.437 2.5 9.19795 4.73899 9.19795 7.5V9.50977H7.19795L6.80206 13.4901H9.19795V21.5Z" />
-    </svg>
-);
-
-const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg 
-        aria-hidden="true"
-        viewBox="0 0 24 24"
-        {...props}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-    >
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-    </svg>
-);
-
-
 const socialLinks = [
-  { icon: FacebookIcon, href: "#", name: "Facebook" },
-  { icon: InstagramIcon, href: "#", name: "Instagram" },
-  { icon: XIcon, href: "#", name: "X" },
+  { icon: FaInstagram, href: "https://www.instagram.com/navkargroupofficial?igsh=MTk0cDZmdWdhMWZ6cg==", name: "Instagram" },
 ];
 
 export function Footer() {
@@ -118,7 +72,7 @@ export function Footer() {
                   href={social.href} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  aria-label={social.name} 
+                  aria-label={`Follow us on ${social.name}`}
                   className="text-muted-foreground p-2 -m-2 rounded-full transition-all duration-300 hover:text-primary hover:scale-110 hover:-translate-y-1"
                 >
                   <social.icon className="h-6 w-6" />
