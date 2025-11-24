@@ -8,8 +8,51 @@ import { motion, useInView } from "framer-motion";
 import { projects, TABS, type Tab } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { Info, Download, MapPin, Building, Ruler, ArrowRight, Check } from "lucide-react";
+import {
+  FaSwimmingPool, 
+  FaDumbbell, 
+  FaParking, 
+  FaShieldAlt,
+  FaTree,
+  FaChild,
+  FaBolt,
+  FaTint,
+  FaStore,
+  FaHospital,
+  FaHome,
+  FaBasketballBall,
+  FaWifi,
+  FaCamera
+} from 'react-icons/fa';
+import { GiElevator } from 'react-icons/gi';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+
+
+const amenityIcons: { [key: string]: React.ReactElement } = {
+  'Swimming Pool': <FaSwimmingPool />,
+  'Gym': <FaDumbbell />,
+  'Fitness Center': <FaDumbbell />,
+  'Parking': <FaParking />,
+  'Security': <FaShieldAlt />,
+  '24/7 Security': <FaShieldAlt />,
+  'Garden': <FaTree />,
+  'Landscape': <FaTree />,
+  'Play Area': <FaChild />,
+  "Children's Play Area": <FaChild />,
+  'Power Backup': <FaBolt />,
+  'Water Supply': <FaTint />,
+  'Lift': <GiElevator />,
+  'Elevator': <GiElevator />,
+  'Shopping Complex': <FaStore />,
+  'Medical Facilities': <FaHospital />,
+  'Club House': <FaHome />,
+  'Sports Facilities': <FaBasketballBall />,
+  'Green Spaces': <FaTree />,
+  'Wi-Fi': <FaWifi />,
+  'CCTV': <FaCamera />
+};
+
 
 // Function to determine badge variant based on status
 const getBadgeVariant = (status: string) => {
@@ -68,7 +111,7 @@ function ProjectCard({ project }: { project: (typeof projects)[0] }) {
             </div>
           </div>
           <div className="p-6 flex flex-col flex-grow bg-gray-50">
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-start flex-wrap gap-y-2">
                 <p className="text-sm text-gray-500 font-medium">{project.type}</p>
                 {project.reraNo && project.reraNo !== "Not Mentioned" && (
                     <span className="px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-green-100 text-green-800">
@@ -76,7 +119,21 @@ function ProjectCard({ project }: { project: (typeof projects)[0] }) {
                     </span>
                 )}
             </div>
-            <div className="mt-auto pt-6 flex justify-end">
+
+            {project.amenities && project.amenities.length > 0 && (
+              <div className="flex flex-wrap gap-2 my-4">
+                {project.amenities.slice(0, 4).map((amenity, index) => (
+                  <span key={index} className="inline-flex items-center gap-1.5 whitespace-nowrap bg-gray-100 px-2.5 py-1 rounded-full">
+                    <span className="flex items-center text-sm text-gray-600">
+                      {amenityIcons[amenity] || <FaHome />}
+                    </span>
+                    <span className="text-[11px] font-medium text-gray-600">{amenity}</span>
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <div className="mt-auto pt-2 flex justify-end">
               <Button className="bg-primary text-white rounded-full px-6 py-3 font-semibold group-hover:bg-primary/90 transition-colors duration-300 shadow-md">
                 Explore Now
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
@@ -163,7 +220,7 @@ function ProjectListItem({ project, index }: { project: (typeof projects)[0]; in
                 <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                     {project.amenities.map((amenity, i) => (
                         <div key={i} className="flex items-center gap-2 text-gray-600">
-                            <Check className="h-4 w-4 text-green-500 flex-shrink-0"/>
+                            {React.cloneElement(amenityIcons[amenity] || <FaHome />, { className: "h-4 w-4 text-green-500 flex-shrink-0" })}
                             <span className="text-sm">{amenity}</span>
                         </div>
                     ))}
